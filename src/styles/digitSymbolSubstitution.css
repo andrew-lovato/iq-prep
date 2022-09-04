@@ -1,4 +1,4 @@
-.digit-symbol-substitution {
+.digit-symbol_substitution {
   width: 100vw;
   height: 70vh;
   display: flex;
@@ -12,7 +12,24 @@
   border: 1px solid black;
 }
 
-.digit-symbol-row {
+.digit-symbol_row {
   margin-bottom: 3rem;
   display: flex;
+}
+
+.digit-symbol_cell.--active {
+  border: 2px solid yellow;
+}
+
+.digit-symbol_start {
+  margin-bottom: 1rem;
+  border: 2px solid blueviolet;
+  cursor: pointer;
+  padding: 1rem;
+}
+.digit-symbol_stop {
+  margin-bottom: 1rem;
+  border: 2px solid red;
+  cursor: pointer;
+  padding: 1rem;
 }

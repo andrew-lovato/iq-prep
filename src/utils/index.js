@@ -1,38 +1,48 @@
-export const generateRandom = (num, type) => {
+// interface Props {
+//   type: "num" | "symbol";
+//   scale: number;
+// }
+
+export const generateRandom = ({ type, scale = 10 }) => {
   switch (type) {
     case "num": {
-      let multiplier = "1";
-      let count = 0;
-      while (count < num) {
-        multiplier += "0";
-        count += 1;
-      }
-
-      let randomNumber = 0;
-
-      while (randomNumber.length !== num) {
-        const random = Math.random() * multiplier;
-
-        randomNumber = String(random).slice(0, num);
-      }
-
-      return randomNumber;
+      return Math.floor(Math.random() * scale);
     }
     case "symbol": {
-      let symbols = "";
-      let count = 0;
+      const allSymbols = [
+        0x1433,
+        0x1438,
+        0x142f,
+        0x1431,
+        0x21f3,
+        0x2b04,
+        0x22a1,
+        0x00b1,
+        0x2213,
+        0x2219,
+        0x22cb,
+        0x0394,
+        0x2203,
+        0x2260,
+        0x27c2,
+        0x221f,
+        0x22aa,
+        0x1d6db,
+        0x2209,
+      ];
 
-      while (count < num) {
-        symbols += String.fromCharCode(
-          0x30a0 + Math.random() * (0x30ff - 0x30a0 + 1)
-        );
+      let symbol;
 
-        count += 1;
+      while (!symbol) {
+        let random = generateRandom({ type: "num", scale: 100 });
+        if (allSymbols[random]) {
+          symbol = allSymbols[random];
+        }
       }
-      return symbols;
+      return symbol;
     }
     default: {
-      return "";
+      return 0;
     }
   }
 };
