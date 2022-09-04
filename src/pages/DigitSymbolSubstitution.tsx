@@ -17,10 +17,14 @@ interface ChoiceKey {
 
 const DigitSymbolSubstitution = () => {
   const initialKey = generateKey();
-  const [row, setRow] = useState<ChoiceCell[]>(generateRow(initialKey));
+  const [row, setRow] = useState<ChoiceCell[]>(
+    generateRow({ key: initialKey })
+  );
   const [key, setKey] = useState<ChoiceKey[]>(initialKey);
   const [activeIndex, setActiveIndex] = useState(0);
   const [count, setCount] = useState(0);
+  const [intervalId, setIntervalId] = useState<any>();
+  const [countdown, setCountdown] = useState(10);
 
   const handleChoiceClick = (choice: number) => {
     const updated = [...row];
@@ -30,7 +34,7 @@ const DigitSymbolSubstitution = () => {
     setRow(updated);
     const updatedIndex = activeIndex + 1;
     if (updatedIndex === row.length) {
-      setRow(generateRow(key));
+      setRow(generateRow({ key }));
       setActiveIndex(0);
     } else setActiveIndex(activeIndex + 1);
     const activeSymbol = row[activeIndex].symbol;
@@ -41,19 +45,38 @@ const DigitSymbolSubstitution = () => {
     if (accurate) setCount(count + 1);
   };
 
-  // handleNumClick(num)
-  // this will update the row/cell with the number selected
-  // It will cause the highlighter to increment
-  // if final cell is highlighted, call generateInitialRow to restart the highlighted cell at hte beginning and clear the cells
+  const handleStartClick = () => {
+    const interval = setInterval(() => {
+      setCountdown((cd) => {
+        if (cd === 0) {
+          handleGameFinished(interval);
+          clearInterval(interval);
+          return 0;
+        } else return cd - 1;
+      });
+    }, 1000);
+    setIntervalId(interval);
+  };
 
-  // Within this game, I want the ability to reverse the layout, choosing numbers or choosing symbols
-  // This would require a button with a handleclick that updates state making the above choice
+  const handleStopClick = () => {
+    handleGameFinished();
+  };
+
+  const handleGameFinished = (interval?) => {
+    clearInterval(interval ? interval : intervalId);
+    setIntervalId(undefined);
+    setCountdown(10);
+    setRow(generateRow({ key: initialKey }));
+    // Do I want to change the key every game?
+  };
 
   return (
     <div>
       <h1>Digit Symbol Substitution Test</h1>
       {/* Make this hidden until timer completes */}
-      <h5>Timer: Score: {count}</h5>
+      <h5>
+        Timer:{countdown} Score: {count}
+      </h5>
       <div className="digit-symbol_substitution">
         <div className="digit-symbol_row">
           {key.map((key) => {
@@ -80,6 +103,18 @@ const DigitSymbolSubstitution = () => {
             );
           })}
         </div>
+        {!intervalId && (
+          <div onClick={handleStartClick} className="digit-symbol_start">
+            Start
+          </div>
+        )}
+
+        {intervalId && (
+          <div onClick={handleStopClick} className="digit-symbol_stop">
+            Stop
+          </div>
+        )}
+
         <div className="digit-symbol_row">
           {keyNums.map((num) => {
             return (
@@ -95,8 +130,8 @@ const DigitSymbolSubstitution = () => {
   );
 };
 
-const generateRow = (key) => {
-  const array20 = Array.from(Array(20));
+const generateRow = ({ key, rowLength = 20 }) => {
+  const array20 = Array.from(Array(rowLength));
   return array20.map((num, index) => {
     let symbolFound;
     let symbol;

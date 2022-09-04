@@ -20,3 +20,16 @@
 .digit-symbol_cell.--active {
   border: 2px solid yellow;
 }
+
+.digit-symbol_start {
+  margin-bottom: 1rem;
+  border: 2px solid blueviolet;
+  cursor: pointer;
+  padding: 1rem;
+}
+.digit-symbol_stop {
+  margin-bottom: 1rem;
+  border: 2px solid red;
+  cursor: pointer;
+  padding: 1rem;
+}
