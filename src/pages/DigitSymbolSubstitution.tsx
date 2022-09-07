@@ -62,18 +62,17 @@ const DigitSymbolSubstitution = () => {
     handleGameFinished();
   };
 
-  const handleGameFinished = (interval?) => {
+  const handleGameFinished = (interval?: any) => {
     clearInterval(interval ? interval : intervalId);
     setIntervalId(undefined);
     setCountdown(10);
     setRow(generateRow({ key: initialKey }));
-    // Do I want to change the key every game?
+    setActiveIndex(0);
   };
 
   return (
     <div>
       <h1>Digit Symbol Substitution Test</h1>
-      {/* Make this hidden until timer completes */}
       <h5>
         Timer:{countdown} Score: {count}
       </h5>
@@ -130,7 +129,13 @@ const DigitSymbolSubstitution = () => {
   );
 };
 
-const generateRow = ({ key, rowLength = 20 }) => {
+const generateRow = ({
+  key,
+  rowLength = 20,
+}: {
+  key: any[];
+  rowLength?: number;
+}) => {
   const array20 = Array.from(Array(rowLength));
   return array20.map((num, index) => {
     let symbolFound;
