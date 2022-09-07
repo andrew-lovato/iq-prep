@@ -67,7 +67,6 @@ const DigitSymbolSubstitution = () => {
     setIntervalId(undefined);
     setCountdown(10);
     setRow(generateRow({ key: initialKey }));
-    // Do I want to change the key every game?
   };
 
   return (
