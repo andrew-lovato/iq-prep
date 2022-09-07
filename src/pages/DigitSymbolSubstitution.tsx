@@ -72,7 +72,6 @@ const DigitSymbolSubstitution = () => {
   return (
     <div>
       <h1>Digit Symbol Substitution Test</h1>
-      {/* Make this hidden until timer completes */}
       <h5>
         Timer:{countdown} Score: {count}
       </h5>

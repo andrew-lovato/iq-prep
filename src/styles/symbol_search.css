@@ -1,0 +1,36 @@
+.symbol-search_row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  border: 1px solid black;
+  font-size: 45px;
+}
+
+.symbol-search_options {
+  width: 10rem;
+}
+
+.symbol-search_symbols {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  padding: 0 1rem;
+  width: 20rem;
+}
+
+.symbol-search_buttons {
+  display: flex;
+}
+.symbol-search_buttons button {
+  margin-left: 1rem;
+  width: 3rem;
+  height: 2rem;
+}
+
+.symbol-search_button_yes.--true {
+  background-color: yellow;
+}
+
+.symbol-search_button_no.--false {
+  background-color: yellow;
+}

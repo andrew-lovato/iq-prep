@@ -32,13 +32,13 @@ export const generateRandom = ({ type, scale = 10 }) => {
       ];
 
       let symbol;
-
       while (!symbol) {
         let random = generateRandom({ type: "num", scale: 100 });
         if (allSymbols[random]) {
           symbol = allSymbols[random];
         }
       }
+
       return symbol;
     }
     default: {
