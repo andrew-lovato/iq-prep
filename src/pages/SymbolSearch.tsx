@@ -3,20 +3,12 @@ import { Link } from "react-router-dom";
 import { generateRandom } from "../utils";
 
 const SymbolSearch = () => {
-  /* 
-    each row has three items: targetSymbols, optionSymbols, yes/no buttons
-    generate your option symbols from allSymbols
-    generate your two targetSymbols also from allSymbols, but limit to two matching 
-
-    I also need to generate a 'correct answer' for each row, submit that answer with the answer from user
-    if they match, add to the count
-    Set a timer etc.
-*/
+  const initialCountdown = 120;
   const [rows, setRows] = useState<any[]>(generateSymbolsRows());
   const [activeIndex, setActiveIndex] = useState(0);
   const [count, setCount] = useState(0);
   const [intervalId, setIntervalId] = useState<any>();
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(initialCountdown);
 
   const handleChoiceClick = (choice: boolean) => {
     const updated = [...rows];
@@ -46,6 +38,7 @@ const SymbolSearch = () => {
       });
     }, 1000);
     setIntervalId(interval);
+    setCount(0);
   };
 
   const handleStopClick = () => {
@@ -55,8 +48,9 @@ const SymbolSearch = () => {
   const handleGameFinished = (interval?: any) => {
     clearInterval(interval ? interval : intervalId);
     setIntervalId(undefined);
-    setCountdown(10);
+    setCountdown(initialCountdown);
     setRows(generateSymbolsRows());
+    setActiveIndex(0);
   };
 
   return (
@@ -65,6 +59,17 @@ const SymbolSearch = () => {
       <h5>
         Timer:{countdown} Score: {count}
       </h5>
+      {!intervalId && (
+        <div onClick={handleStartClick} className="digit-symbol_start">
+          Start
+        </div>
+      )}
+
+      {intervalId && (
+        <div onClick={handleStopClick} className="digit-symbol_stop">
+          Stop
+        </div>
+      )}
       <div>
         {rows.map((row) => {
           console.log("object :>> ", `--${row.choice}`);
@@ -96,17 +101,6 @@ const SymbolSearch = () => {
             </div>
           );
         })}
-        {!intervalId && (
-          <div onClick={handleStartClick} className="digit-symbol_start">
-            Start
-          </div>
-        )}
-
-        {intervalId && (
-          <div onClick={handleStopClick} className="digit-symbol_stop">
-            Stop
-          </div>
-        )}
       </div>
       <Link to="/">Back to home</Link>
     </div>

@@ -67,6 +67,7 @@ const DigitSymbolSubstitution = () => {
     setIntervalId(undefined);
     setCountdown(10);
     setRow(generateRow({ key: initialKey }));
+    setActiveIndex(0);
   };
 
   return (
