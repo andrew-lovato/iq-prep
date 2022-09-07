@@ -62,7 +62,7 @@ const DigitSymbolSubstitution = () => {
     handleGameFinished();
   };
 
-  const handleGameFinished = (interval?) => {
+  const handleGameFinished = (interval?: any) => {
     clearInterval(interval ? interval : intervalId);
     setIntervalId(undefined);
     setCountdown(10);
@@ -129,7 +129,13 @@ const DigitSymbolSubstitution = () => {
   );
 };
 
-const generateRow = ({ key, rowLength = 20 }) => {
+const generateRow = ({
+  key,
+  rowLength = 20,
+}: {
+  key: any[];
+  rowLength?: number;
+}) => {
   const array20 = Array.from(Array(rowLength));
   return array20.map((num, index) => {
     let symbolFound;

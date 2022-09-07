@@ -1,4 +1,4 @@
-.app-router > div {
+.home {
   display: flex;
   flex-direction: column;
 }
