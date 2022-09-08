@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { generateRandom } from "../utils";
+import GameState from "../components/GameState";
+import StartStopButtons from "../components/StartStopButtons";
+import { charCodeToSymbol, generateRandom } from "../utils";
 
 const SymbolSearch = () => {
   const initialCountdown = 120;
@@ -56,31 +58,29 @@ const SymbolSearch = () => {
   return (
     <div>
       <h1>Symbol Search</h1>
-      <h5>
-        Timer:{countdown} Score: {count}
-      </h5>
-      {!intervalId && (
-        <div onClick={handleStartClick} className="digit-symbol_start">
-          Start
-        </div>
-      )}
+      <GameState
+        onStartClick={handleStartClick}
+        onStopClick={handleStopClick}
+        displayStartButton={Boolean(!intervalId)}
+        displayStopButton={Boolean(intervalId)}
+        countdown={countdown}
+        score={count}
+      />
 
-      {intervalId && (
-        <div onClick={handleStopClick} className="digit-symbol_stop">
-          Stop
-        </div>
-      )}
       <div>
         {rows.map((row) => {
-          console.log("object :>> ", `--${row.choice}`);
           return (
             <div className="symbol-search_row">
               <div className="symbol-search_options">
                 {" "}
-                {row.options.map((option) => String.fromCharCode(option))}{" "}
+                {row.options.map((option) => charCodeToSymbol(option))}{" "}
               </div>
               <div className="symbol-search_symbols">
-                {row.symbols.map((symbol) => String.fromCharCode(symbol))}
+                {row.symbols.map((symbol) => (
+                  <span className="symbol-search_symbol">
+                    {charCodeToSymbol(symbol)}
+                  </span>
+                ))}
               </div>
               <div className="symbol-search_buttons ">
                 <button
@@ -133,7 +133,7 @@ const generateSymbolsRows = (rowCount = 20, length = 6) => {
     for (const option of options) {
       if (symbols.includes(option)) includesCount += 1;
     }
-    if (includesCount === 2) row.answer = true;
+    if (includesCount >= 1) row.answer = true;
 
     rows.push(row);
   }

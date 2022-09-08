@@ -23,7 +23,6 @@ export const generateRandom = ({ type, scale = 10 }) => {
         0x22cb,
         0x0394,
         0x2203,
-        0x2260,
         0x27c2,
         0x221f,
         0x22aa,
@@ -45,4 +44,8 @@ export const generateRandom = ({ type, scale = 10 }) => {
       return 0;
     }
   }
+};
+
+export const charCodeToSymbol = (charCode) => {
+  return String.fromCharCode(charCode);
 };

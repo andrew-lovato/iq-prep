@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { generateRandom } from "../utils";
+import GameState from "../components/GameState";
+import { generateRandom, charCodeToSymbol } from "../utils";
 
 const keyNums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -16,15 +17,16 @@ interface ChoiceKey {
 }
 
 const DigitSymbolSubstitution = () => {
-  const initialKey = generateKey();
+  const initialKey = generateKeyData();
+  const initialCountdown = 120;
   const [row, setRow] = useState<ChoiceCell[]>(
-    generateRow({ key: initialKey })
+    generateRowData({ key: initialKey })
   );
   const [key, setKey] = useState<ChoiceKey[]>(initialKey);
   const [activeIndex, setActiveIndex] = useState(0);
   const [count, setCount] = useState(0);
   const [intervalId, setIntervalId] = useState<any>();
-  const [countdown, setCountdown] = useState(10);
+  const [countdown, setCountdown] = useState(initialCountdown);
 
   const handleChoiceClick = (choice: number) => {
     const updated = [...row];
@@ -34,7 +36,7 @@ const DigitSymbolSubstitution = () => {
     setRow(updated);
     const updatedIndex = activeIndex + 1;
     if (updatedIndex === row.length) {
-      setRow(generateRow({ key }));
+      setRow(generateRowData({ key }));
       setActiveIndex(0);
     } else setActiveIndex(activeIndex + 1);
     const activeSymbol = row[activeIndex].symbol;
@@ -65,71 +67,91 @@ const DigitSymbolSubstitution = () => {
   const handleGameFinished = (interval?: any) => {
     clearInterval(interval ? interval : intervalId);
     setIntervalId(undefined);
-    setCountdown(10);
-    setRow(generateRow({ key: initialKey }));
+    setCountdown(initialCountdown);
+    setRow(generateRowData({ key: initialKey }));
     setActiveIndex(0);
   };
 
   return (
-    <div>
+    <div className="digit-symbol_substitution">
       <h1>Digit Symbol Substitution Test</h1>
-      <h5>
-        Timer:{countdown} Score: {count}
-      </h5>
-      <div className="digit-symbol_substitution">
-        <div className="digit-symbol_row">
-          {key.map((key) => {
-            return (
-              <div>
-                <div className="col-box">{String.fromCharCode(key.symbol)}</div>
-                <div className="col-box">{key.num}</div>
-              </div>
-            );
-          })}
-        </div>
-        <div className="digit-symbol_row">
-          {row.map((cell, index) => {
-            const isActive = index === activeIndex;
-            return (
-              <div
-                className={`digit-symbol_cell ${isActive ? "--active" : ""}`}
-              >
-                <div className="col-box">
-                  {String.fromCharCode(cell.symbol)}
-                </div>
-                <div className="col-box">{cell.choice}</div>
-              </div>
-            );
-          })}
-        </div>
-        {!intervalId && (
-          <div onClick={handleStartClick} className="digit-symbol_start">
-            Start
-          </div>
-        )}
-
-        {intervalId && (
-          <div onClick={handleStopClick} className="digit-symbol_stop">
-            Stop
-          </div>
-        )}
-
-        <div className="digit-symbol_row">
-          {keyNums.map((num) => {
-            return (
-              <div onClick={() => handleChoiceClick(num)} className="col-box">
-                {num}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      <GameState
+        onStartClick={handleStartClick}
+        onStopClick={handleStopClick}
+        displayStartButton={Boolean(!intervalId)}
+        displayStopButton={Boolean(intervalId)}
+        countdown={countdown}
+        score={count}
+      />
+      <CreateKey gameKey={key} />
+      <CreateEmptyCells row={row} activeIndex={activeIndex} />
+      <CreateOptions options={keyNums} onClick={handleChoiceClick} />
       <Link to="/">Back to home</Link>
     </div>
   );
 };
 
-const generateRow = ({
+const CreateOptions = ({
+  options,
+  onClick,
+}: {
+  options: number[];
+  onClick: (param) => void;
+}) => {
+  const handleChoiceClick = (num) => {
+    onClick(num);
+  };
+  return (
+    <div className="digit-symbol_row">
+      {options.map((num) => {
+        return (
+          <div onClick={() => handleChoiceClick(num)} className="col-box">
+            {num}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const CreateKey = ({ gameKey }: { gameKey: ChoiceKey[] }) => {
+  return (
+    <div className="digit-symbol_row">
+      {gameKey.map((key) => {
+        return (
+          <div>
+            <div className="col-box">{charCodeToSymbol(key.symbol)}</div>
+            <div className="col-box">{key.num}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const CreateEmptyCells = ({
+  row,
+  activeIndex,
+}: {
+  row: ChoiceCell[];
+  activeIndex: number;
+}) => {
+  return (
+    <div className="digit-symbol_row">
+      {row.map((cell, index) => {
+        const isActive = index === activeIndex;
+        return (
+          <div className={`digit-symbol_cell ${isActive ? "--active" : ""}`}>
+            <div className="col-box">{charCodeToSymbol(cell.symbol)}</div>
+            <div className="col-box">{cell.choice}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const generateRowData = ({
   key,
   rowLength = 20,
 }: {
@@ -151,7 +173,7 @@ const generateRow = ({
   });
 };
 
-const generateKey = () => {
+const generateKeyData = () => {
   const symbols = [] as any;
 
   keyNums.forEach((el) => {
